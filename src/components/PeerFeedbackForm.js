@@ -18,7 +18,7 @@ function PeerFeedbackForm({ senderId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/peer-feedback", {
+      await axios.post("https://feedback-system-backend-9djn.onrender.com/peer-feedback", {
         sender_id: senderId,
         receiver_id: receiverId,
         message,

@@ -60,9 +60,7 @@ function EmployeeDashboard({ employeeId }) {
 
   const handleAcknowledge = async (feedbackId) => {
     try {
-      await axios.put(
-        `http://localhost:8000/feedback/acknowledge/${feedbackId}`
-      );
+      await axios.put(`http://localhost:8000/feedback/acknowledge/${feedbackId}`);
       const updated = feedbackList.map((fb) =>
         fb.id === feedbackId ? { ...fb, acknowledged: true } : fb
       );
