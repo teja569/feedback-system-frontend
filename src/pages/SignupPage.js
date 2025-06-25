@@ -44,33 +44,47 @@ function SignupPage({ onSignupSuccess, goToLogin }) {
     <div style={styles.card}>
       <h2 style={styles.title}>📝 Create Account</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <select
-          style={styles.select}
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option value="employee">Employee</option>
-          <option value="manager">Manager</option>
-        </select>
-        <button style={styles.button} type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Sign Up"}
-        </button>
-      </form>
+  <label htmlFor="username" style={{ display: "none" }}>Username</label>
+  <input
+    style={styles.input}
+    id="username"
+    name="username"
+    placeholder="Username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    required
+    autoComplete="username"
+  />
+
+  <label htmlFor="password" style={{ display: "none" }}>Password</label>
+  <input
+    style={styles.input}
+    id="password"
+    name="password"
+    type="password"
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+    autoComplete="new-password"
+  />
+
+  <label htmlFor="role" style={{ display: "none" }}>Role</label>
+  <select
+    id="role"
+    style={styles.select}
+    value={role}
+    onChange={(e) => setRole(e.target.value)}
+  >
+    <option value="employee">Employee</option>
+    <option value="manager">Manager</option>
+  </select>
+
+  <button style={styles.button} type="submit" disabled={loading}>
+    {loading ? "Creating..." : "Sign Up"}
+  </button>
+</form>
+
 
       {message && (
         <p style={{ ...styles.message, color: isSuccess ? "green" : "red" }}>

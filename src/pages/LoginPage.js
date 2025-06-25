@@ -37,25 +37,36 @@ function LoginPage({ onLogin }) {
     <div style={styles.card}>
       <h2 style={styles.title}>🔐 Feedback Portal Login</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          style={styles.input}
-          placeholder="👤 Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="🔒 Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button style={styles.button} type="submit" disabled={loading}>
-          {loading ? "⏳ Logging in..." : "🚀 Login"}
-        </button>
-      </form>
+  <label htmlFor="username" style={{ display: "none" }}>Username</label>
+  <input
+    style={styles.input}
+    id="username"
+    name="username"
+    placeholder="👤 Username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    required
+    autoComplete="username"
+  />
+
+  <label htmlFor="password" style={{ display: "none" }}>Password</label>
+  <input
+    style={styles.input}
+    id="password"
+    name="password"
+    type="password"
+    placeholder="🔒 Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+    autoComplete="current-password"
+  />
+  
+  <button style={styles.button} type="submit" disabled={loading}>
+    {loading ? "⏳ Logging in..." : "🚀 Login"}
+  </button>
+</form>
+
 
       <div style={styles.linkWrapper}>
         <Link to="/forgot-password" style={styles.forgotLink}>

@@ -30,17 +30,22 @@ function ForgotPassword() {
     <div style={styles.container}>
       <h2 style={styles.title}>🔑 Forgot Password</h2>
       <form onSubmit={handleRequest}>
-        <input
-          style={styles.input}
-          placeholder="Enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <button style={styles.button} type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Get Reset Link"}
-        </button>
-      </form>
+  <label htmlFor="username" style={{ display: "none" }}>Username</label>
+  <input
+    style={styles.input}
+    id="username"
+    name="username"
+    placeholder="Enter your username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    required
+    autoComplete="username"
+  />
+  <button style={styles.button} type="submit" disabled={loading}>
+    {loading ? "Sending..." : "Get Reset Link"}
+  </button>
+</form>
+
       {message && <p style={styles.message}>{message}</p>}
     </div>
   );

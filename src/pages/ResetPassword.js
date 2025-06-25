@@ -6,7 +6,6 @@ function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
-  const [username, setUsername] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -25,10 +24,10 @@ function ResetPassword() {
 
     try {
       const form = new FormData();
-      form.append("username", username);
+      form.append("token", token);
       form.append("new_password", newPassword);
 
-      const res = await axios.put(
+      const res = await axios.post(
         "https://feedback-system-backend-9djn.onrender.com/reset-password",
         form
       );
@@ -49,20 +48,15 @@ function ResetPassword() {
       <form onSubmit={handleReset}>
         <input
           style={styles.input}
-          placeholder="Enter your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          style={styles.input}
           type="password"
+          name="new_password"
+          id="new_password"
           placeholder="New Password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           required
         />
-        <button style={styles.button} type="submit" disabled={loading}>
+        <button style={styles.button} type="submit" disabled={loading || !token}>
           {loading ? "Resetting..." : "Reset"}
         </button>
       </form>
