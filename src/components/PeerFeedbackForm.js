@@ -24,20 +24,20 @@ function PeerFeedbackForm({ senderId }) {
         message,
         anonymous,
       });
-      setStatus("Feedback submitted successfully!");
+      setStatus("✅ Feedback submitted successfully!");
       setReceiverId("");
       setMessage("");
       setAnonymous(false);
     } catch {
-      setStatus("Failed to send feedback.");
+      setStatus("❌ Failed to send feedback.");
     }
   };
 
   return (
     <div style={styles.card}>
       <h3 style={styles.title}>🤝 Send Peer Feedback</h3>
-      <form onSubmit={handleSubmit}>
-        <label style={styles.label}>To:</label>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <label style={styles.label}>To</label>
         <select
           value={receiverId}
           onChange={(e) => setReceiverId(e.target.value)}
@@ -54,7 +54,7 @@ function PeerFeedbackForm({ senderId }) {
             ))}
         </select>
 
-        <label style={styles.label}>Message:</label>
+        <label style={styles.label}>Message</label>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -63,18 +63,22 @@ function PeerFeedbackForm({ senderId }) {
           style={styles.textarea}
         />
 
-        <div style={styles.checkbox}>
+        <div style={styles.checkboxWrapper}>
           <input
             type="checkbox"
+            id="anonymous"
             checked={anonymous}
             onChange={() => setAnonymous(!anonymous)}
           />
-          <span style={{ marginLeft: "8px" }}>Send anonymously</span>
+          <label htmlFor="anonymous" style={styles.checkboxLabel}>
+            Send anonymously
+          </label>
         </div>
 
         <button type="submit" style={styles.button}>
-          Submit
+          🚀 Submit Feedback
         </button>
+
         {status && <p style={styles.status}>{status}</p>}
       </form>
     </div>
@@ -83,59 +87,75 @@ function PeerFeedbackForm({ senderId }) {
 
 const styles = {
   card: {
-    background: "#fff",
-    borderRadius: "10px",
-    padding: "25px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+    background: "#ffffff",
+    borderRadius: "12px",
+    padding: "30px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
     maxWidth: "500px",
-    margin: "20px auto",
+    margin: "0 auto",
   },
   title: {
-    marginBottom: "15px",
-    fontSize: "1.3rem",
-    color: "#333",
+    fontSize: "1.5rem",
+    color: "#2c3e50",
+    marginBottom: "20px",
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
   },
   label: {
-    fontWeight: "bold",
-    display: "block",
-    marginTop: "10px",
-    marginBottom: "5px",
+    fontWeight: "600",
+    color: "#34495e",
   },
   input: {
     width: "100%",
     padding: "10px",
-    borderRadius: "6px",
+    borderRadius: "8px",
     border: "1px solid #ccc",
-    fontSize: "16px",
-    marginBottom: "15px",
+    fontSize: "15px",
+    backgroundColor: "#fff",
+    transition: "border-color 0.3s ease",
   },
   textarea: {
     width: "100%",
-    height: "80px",
-    padding: "10px",
-    borderRadius: "6px",
+    height: "90px",
+    padding: "12px",
+    borderRadius: "8px",
     border: "1px solid #ccc",
-    fontSize: "16px",
-    marginBottom: "15px",
+    fontSize: "15px",
+    backgroundColor: "#fff",
+    resize: "vertical",
+    fontFamily: "Segoe UI, sans-serif",
   },
-  checkbox: {
-    marginBottom: "15px",
+  checkboxWrapper: {
     display: "flex",
     alignItems: "center",
+    gap: "8px",
+    marginTop: "5px",
+  },
+  checkboxLabel: {
+    fontSize: "14px",
+    color: "#555",
+    userSelect: "none",
   },
   button: {
-    width: "100%",
-    padding: "10px",
+    padding: "12px",
     backgroundColor: "#3498db",
     color: "#fff",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     fontSize: "16px",
+    fontWeight: "600",
     cursor: "pointer",
+    transition: "background-color 0.3s",
   },
   status: {
     marginTop: "10px",
-    color: "green",
+    color: "#2ecc71",
+    fontWeight: "bold",
   },
 };
 

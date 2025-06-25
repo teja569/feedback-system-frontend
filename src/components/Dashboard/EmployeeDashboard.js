@@ -13,6 +13,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 function EmployeeDashboard({ employeeId }) {
   const [feedbackList, setFeedbackList] = useState([]);
+  const [peerFeedbacks, setPeerFeedbacks] = useState([]);
 
   useEffect(() => {
     const fetchFeedback = async () => {
@@ -21,6 +22,11 @@ function EmployeeDashboard({ employeeId }) {
           `https://feedback-system-backend-9djn.onrender.com/feedback/${employeeId}`
         );
         setFeedbackList(res.data.reverse());
+
+        const peerRes = await axios.get(
+          `https://feedback-system-backend-9djn.onrender.com/peer-feedback/${employeeId}`
+        );
+        setPeerFeedbacks(peerRes.data.reverse());
       } catch (err) {
         console.error("Failed to load feedback", err);
       }
@@ -51,8 +57,8 @@ function EmployeeDashboard({ employeeId }) {
           sentimentCounts.neutral,
           sentimentCounts.negative,
         ],
-        backgroundColor: ["#66ff66", "#fff266", "#ff6666"],
-        borderColor: ["#33cc33", "#e0c200", "#cc0000"],
+        backgroundColor: ["#27ae60", "#f1c40f", "#e74c3c"],
+        borderColor: ["#219150", "#d4af0c", "#c0392b"],
         borderWidth: 1,
       },
     ],
@@ -60,7 +66,9 @@ function EmployeeDashboard({ employeeId }) {
 
   const handleAcknowledge = async (feedbackId) => {
     try {
-      await axios.put(`http://localhost:8000/feedback/acknowledge/${feedbackId}`);
+      await axios.put(
+        `https://feedback-system-backend-9djn.onrender.com/feedback/acknowledge/${feedbackId}`
+      );
       const updated = feedbackList.map((fb) =>
         fb.id === feedbackId ? { ...fb, acknowledged: true } : fb
       );
@@ -72,18 +80,18 @@ function EmployeeDashboard({ employeeId }) {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Welcome, Employee</h2>
+      <h2 style={styles.title}>🎯 Employee Dashboard</h2>
 
       {feedbackList.length > 0 && (
         <div style={styles.chartSection}>
-          <h3>Sentiment Summary</h3>
+          <h3>📊 Sentiment Summary</h3>
           <div style={styles.chartWrapper}>
             <Doughnut data={data} />
           </div>
         </div>
       )}
 
-      <h3 style={styles.subheading}>Feedback Received</h3>
+      <h3 style={styles.subheading}>📥 Feedback from Manager</h3>
       {feedbackList.length === 0 ? (
         <p>No feedback yet.</p>
       ) : (
@@ -94,21 +102,15 @@ function EmployeeDashboard({ employeeId }) {
               ...styles.feedbackCard,
               backgroundColor:
                 fb.sentiment === "positive"
-                  ? "#e0ffe0"
+                  ? "#e8f8f5"
                   : fb.sentiment === "neutral"
-                  ? "#fffce0"
-                  : "#ffe0e0",
+                  ? "#fcf3cf"
+                  : "#f9ebea",
             }}
           >
-            <p>
-              <strong>Strengths:</strong> {fb.strengths}
-            </p>
-            <p>
-              <strong>Improvements:</strong> {fb.improvements}
-            </p>
-            <p>
-              <strong>Sentiment:</strong> {fb.sentiment}
-            </p>
+            <p><strong>Strengths:</strong> {fb.strengths}</p>
+            <p><strong>Improvements:</strong> {fb.improvements}</p>
+            <p><strong>Sentiment:</strong> {fb.sentiment}</p>
             <p style={styles.timestamp}>
               <em>Received on:</em> {new Date(fb.created_at).toLocaleString()}
             </p>
@@ -117,7 +119,7 @@ function EmployeeDashboard({ employeeId }) {
                 style={styles.ackBtn}
                 onClick={() => handleAcknowledge(fb.id)}
               >
-                Mark as Read
+                ✅ Mark as Read
               </button>
             ) : (
               <p style={styles.acknowledged}>✔ Acknowledged</p>
@@ -126,8 +128,26 @@ function EmployeeDashboard({ employeeId }) {
         ))
       )}
 
+      <h3 style={styles.subheading}>🧑‍🤝‍🧑 Peer Feedback</h3>
+      {peerFeedbacks.length === 0 ? (
+        <p>No peer feedback yet.</p>
+      ) : (
+        peerFeedbacks.map((pf) => (
+          <div key={pf.id} style={{ ...styles.feedbackCard, backgroundColor: "#f4f6f7" }}>
+            <p><strong>Message:</strong> {pf.message}</p>
+            <p>
+              <strong>From:</strong>{" "}
+              {pf.anonymous ? "Anonymous" : `User ID ${pf.sender_id}`}
+            </p>
+            <p style={styles.timestamp}>
+              <em>Sent on:</em> {new Date(pf.created_at).toLocaleString()}
+            </p>
+          </div>
+        ))
+      )}
+
       <div style={styles.peerSection}>
-        <h3>🤝 Send Feedback to Peer</h3>
+        <h3>📤 Send Feedback to Peer</h3>
         <PeerFeedbackForm senderId={employeeId} />
       </div>
     </div>
@@ -136,18 +156,24 @@ function EmployeeDashboard({ employeeId }) {
 
 const styles = {
   container: {
-    maxWidth: "700px",
+    maxWidth: "800px",
     margin: "40px auto",
     padding: "20px",
     fontFamily: "Segoe UI, sans-serif",
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
+    boxShadow: "0 0 12px rgba(0,0,0,0.1)",
   },
   title: {
     textAlign: "center",
-    marginBottom: "30px",
+    fontSize: "1.8rem",
+    color: "#2c3e50",
+    marginBottom: "25px",
   },
   subheading: {
     marginTop: "40px",
     marginBottom: "20px",
+    color: "#34495e",
   },
   chartSection: {
     textAlign: "center",
@@ -158,7 +184,7 @@ const styles = {
     margin: "20px auto",
   },
   feedbackCard: {
-    border: "1px solid #ccc",
+    border: "1px solid #dcdcdc",
     borderRadius: "10px",
     padding: "15px",
     marginBottom: "15px",
@@ -166,14 +192,14 @@ const styles = {
   },
   timestamp: {
     fontSize: "0.9em",
-    color: "#555",
+    color: "#7f8c8d",
     marginTop: "10px",
   },
   ackBtn: {
     marginTop: "10px",
     padding: "8px 12px",
     borderRadius: "5px",
-    backgroundColor: "#007bff",
+    backgroundColor: "#3498db",
     color: "white",
     border: "none",
     cursor: "pointer",
@@ -184,9 +210,9 @@ const styles = {
     marginTop: "10px",
   },
   peerSection: {
-    marginTop: "40px",
-    paddingTop: "20px",
-    borderTop: "2px solid #eee",
+    marginTop: "50px",
+    paddingTop: "25px",
+    borderTop: "2px solid #ecf0f1",
   },
 };
 

@@ -20,15 +20,16 @@ function App() {
       fontFamily: "Segoe UI, sans-serif",
       background: "linear-gradient(135deg, #f6f9fc, #ddeaf6)",
       minHeight: "100vh",
-      padding: "40px 20px",
+      padding: "5vw 3vw",
       color: "#333",
     },
     card: {
       maxWidth: "500px",
+      width: "100%",
       margin: "auto",
       backgroundColor: "#ffffff",
       borderRadius: "14px",
-      padding: "35px",
+      padding: "5vw",
       boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
       textAlign: "center",
     },
@@ -46,10 +47,6 @@ function App() {
       marginTop: "10px",
       cursor: "pointer",
       transition: "background-color 0.3s, transform 0.2s",
-    },
-    switchBtnHover: {
-      backgroundColor: "#3c7dc9",
-      transform: "scale(1.03)",
     },
     logoutBtn: {
       marginTop: "30px",
@@ -77,11 +74,9 @@ function App() {
                 }}
               />
               <p style={styles.link}>
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <button
                   style={styles.switchBtn}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#3c7dc9"}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4a90e2"}
                   onClick={() => setIsSignup(false)}
                 >
                   Switch to Login
@@ -97,11 +92,9 @@ function App() {
                 }}
               />
               <p style={styles.link}>
-                Don’t have an account?{" "}
+                Don’t have an account?{' '}
                 <button
                   style={styles.switchBtn}
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#3c7dc9"}
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4a90e2"}
                   onClick={() => setIsSignup(true)}
                 >
                   Signup Here

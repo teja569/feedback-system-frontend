@@ -1,15 +1,19 @@
+// ManagerDashboard.js
 import React, { useState, useEffect } from "react";
 import FeedbackForm from "../FeedbackForm";
 import FeedbackList from "../FeedbackList";
 import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function ManagerDashboard({ managerId }) {
   const [employees, setEmployees] = useState([]);
   const [selectedId, setSelectedId] = useState("");
+
   const handleLogout = () => {
-  localStorage.clear(); // or any auth cleanup logic
-  window.location.href = "/login"; // redirect to login page
-};
+    localStorage.clear();
+    window.location.href = "/login";
+  };
 
   useEffect(() => {
     axios
@@ -17,6 +21,41 @@ function ManagerDashboard({ managerId }) {
       .then((res) => setEmployees(res.data))
       .catch(() => setEmployees([]));
   }, []);
+
+  const exportFeedbackAsPDF = async () => {
+    if (!selectedId) return;
+    try {
+      const res = await axios.get(
+        `https://feedback-system-backend-9djn.onrender.com/feedback/${selectedId}`
+      );
+      const feedbacks = res.data;
+
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("Feedback Report", 14, 22);
+      doc.setFontSize(12);
+      doc.text(`Employee ID: ${selectedId}`, 14, 30);
+
+      const rows = feedbacks.map((fb, i) => [
+        i + 1,
+        fb.strengths,
+        fb.improvements,
+        fb.sentiment,
+        new Date(fb.created_at).toLocaleString(),
+      ]);
+
+      doc.autoTable({
+        startY: 40,
+        head: [["#", "Strengths", "Improvements", "Sentiment", "Date"]],
+        body: rows,
+        styles: { fontSize: 10 },
+      });
+
+      doc.save(`feedback_employee_${selectedId}.pdf`);
+    } catch (err) {
+      alert("Failed to export PDF.");
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -46,9 +85,14 @@ function ManagerDashboard({ managerId }) {
         </div>
 
         {selectedId && (
-          <div style={styles.feedbackList}>
-            <FeedbackList employeeId={selectedId} isManager={true} />
-          </div>
+          <>
+            <button style={styles.exportButton} onClick={exportFeedbackAsPDF}>
+              📄 Export as PDF
+            </button>
+            <div style={styles.feedbackList}>
+              <FeedbackList employeeId={selectedId} isManager={true} />
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -110,6 +154,17 @@ const styles = {
     backgroundPosition: "right 12px center",
     backgroundSize: "16px",
     boxShadow: "inset 0 1px 3px rgba(0, 0, 0, 0.04)",
+  },
+  exportButton: {
+    padding: "10px 18px",
+    backgroundColor: "#27ae60",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "15px",
+    marginBottom: "20px",
+    boxShadow: "0 3px 6px rgba(0,0,0,0.1)",
   },
   feedbackList: {
     marginTop: "10px",

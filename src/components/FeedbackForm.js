@@ -33,22 +33,21 @@ function FeedbackForm({ managerId }) {
       setImprovements("");
       setSentiment("positive");
     } catch {
-      setMessage("Failed to submit feedback");
+      setMessage("❌ Failed to submit feedback");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
-      <label style={styles.label}>Select Employee</label>
+      <label style={styles.label}>👤 Select Employee</label>
       <select
-  style={styles.input}
-  onFocus={(e) => (e.target.style.borderColor = "#4CAF50")}
-  onBlur={(e) => (e.target.style.borderColor = "#ccc")}
-  value={employeeId}
-  onChange={(e) => setEmployeeId(e.target.value)}
-  required
->
-
+        style={styles.input}
+        onFocus={(e) => (e.target.style.borderColor = "#4CAF50")}
+        onBlur={(e) => (e.target.style.borderColor = "#ccc")}
+        value={employeeId}
+        onChange={(e) => setEmployeeId(e.target.value)}
+        required
+      >
         <option value="">-- Select --</option>
         {employees.map((emp) => (
           <option key={emp.id} value={emp.id}>
@@ -57,7 +56,7 @@ function FeedbackForm({ managerId }) {
         ))}
       </select>
 
-      <label style={styles.label}>Strengths</label>
+      <label style={styles.label}>💪 Strengths</label>
       <textarea
         style={styles.textarea}
         placeholder="Write strengths here..."
@@ -66,7 +65,7 @@ function FeedbackForm({ managerId }) {
         required
       />
 
-      <label style={styles.label}>Areas to Improve</label>
+      <label style={styles.label}>📉 Areas to Improve</label>
       <textarea
         style={styles.textarea}
         placeholder="Write improvement suggestions here..."
@@ -75,7 +74,7 @@ function FeedbackForm({ managerId }) {
         required
       />
 
-      <label style={styles.label}>Sentiment</label>
+      <label style={styles.label}>🧭 Sentiment</label>
       <select
         style={styles.input}
         value={sentiment}
@@ -87,7 +86,7 @@ function FeedbackForm({ managerId }) {
       </select>
 
       <button type="submit" style={styles.button}>
-        Submit Feedback
+        ✅ Submit Feedback
       </button>
 
       {message && <p style={styles.message}>{message}</p>}
@@ -100,45 +99,53 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "15px",
+    padding: "20px",
+    borderRadius: "12px",
+    backgroundColor: "#f9f9f9",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.05)",
   },
   label: {
-    fontWeight: "600",
-    color: "#333",
+    fontWeight: "bold",
+    color: "#2c3e50",
+    fontSize: "15px",
   },
   input: {
-  width: "100%",
-  padding: "10px",
-  marginBottom: "15px",
-  borderRadius: "6px",
-  border: "1px solid #ccc",
-  fontSize: "16px",
-  backgroundColor: "#fff",
-  outline: "none",
-  boxShadow: "inset 0 1px 3px rgba(0, 0, 0, 0.05)",
-},
-
-  textarea: {
-    padding: "10px",
+    width: "100%",
+    padding: "12px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
     fontSize: "15px",
-    height: "90px",
-    borderRadius: "6px",
+    backgroundColor: "#fff",
+    outline: "none",
+    transition: "border-color 0.3s",
+  },
+  textarea: {
+    padding: "12px",
+    fontSize: "15px",
+    borderRadius: "8px",
     border: "1px solid #ccc",
     resize: "vertical",
+    height: "90px",
+    backgroundColor: "#fff",
+    fontFamily: "Segoe UI, sans-serif",
+    transition: "border-color 0.3s",
   },
   button: {
-    padding: "12px",
+    padding: "14px",
     backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
+    color: "#fff",
+    fontWeight: "600",
     fontSize: "16px",
+    border: "none",
+    borderRadius: "8px",
     cursor: "pointer",
-    transition: "0.3s",
+    transition: "background-color 0.3s",
   },
   message: {
     marginTop: "10px",
     color: "#2e7d32",
     fontWeight: "bold",
+    fontSize: "15px",
   },
 };
 

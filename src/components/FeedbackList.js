@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function FeedbackList({ employeeId, isManager = false }) {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -48,9 +50,35 @@ function FeedbackList({ employeeId, isManager = false }) {
     }
   };
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Employee Feedback Report", 14, 20);
+    autoTable(doc, {
+      startY: 30,
+      head: [["Strengths", "Improvements", "Sentiment", "Created At"]],
+      body: feedbacks.map((fb) => [
+        fb.strengths,
+        fb.improvements,
+        fb.sentiment,
+        new Date(fb.created_at).toLocaleString(),
+      ]),
+      styles: { fontSize: 10 },
+    });
+    doc.save("feedback_report.pdf");
+  };
+
   return (
     <div>
-      <h3 style={styles.heading}>📜 Feedback History</h3>
+      <div style={styles.headerRow}>
+        <h3 style={styles.heading}>📜 Feedback History</h3>
+        {isManager && feedbacks.length > 0 && (
+          <button style={styles.downloadBtn} onClick={exportToPDF}>
+            📥 Download PDF
+          </button>
+        )}
+      </div>
+
       {feedbacks.length === 0 ? (
         <p style={{ fontStyle: "italic" }}>No feedback found.</p>
       ) : (
@@ -61,10 +89,10 @@ function FeedbackList({ employeeId, isManager = false }) {
               ...styles.card,
               backgroundColor:
                 fb.sentiment === "positive"
-                  ? "#e0ffe0"
+                  ? "#e8fce8"
                   : fb.sentiment === "neutral"
-                  ? "#fffce0"
-                  : "#ffe0e0",
+                  ? "#fffddc"
+                  : "#ffe4e1",
             }}
           >
             {editingId === fb.id ? (
@@ -123,9 +151,24 @@ function FeedbackList({ employeeId, isManager = false }) {
 
 const styles = {
   heading: {
-    fontSize: "1.3rem",
+    fontSize: "1.5rem",
+    marginBottom: "10px",
+    color: "#34495e",
+  },
+  headerRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: "15px",
-    color: "#2c3e50",
+  },
+  downloadBtn: {
+    backgroundColor: "#2ecc71",
+    color: "#fff",
+    border: "none",
+    padding: "10px 16px",
+    fontSize: "14px",
+    borderRadius: "8px",
+    cursor: "pointer",
   },
   card: {
     border: "1px solid #ccc",
@@ -152,13 +195,7 @@ const styles = {
     borderRadius: "6px",
     border: "1px solid #bbb",
     marginBottom: "10px",
-    appearance: "none",
-    backgroundImage:
-      "url('data:image/svg+xml;utf8,<svg fill=%22gray%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>')",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 12px center",
     backgroundColor: "#fff",
-    backgroundSize: "18px",
   },
   timestamp: {
     fontSize: "0.9em",

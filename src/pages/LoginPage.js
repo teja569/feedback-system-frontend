@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -17,20 +18,20 @@ function LoginPage({ onLogin }) {
       if (res.data.role) {
         onLogin(res.data);
       } else {
-        setMessage("Invalid credentials");
+        setMessage("❌ Invalid credentials");
       }
-    } catch (err) {
-      setMessage("Server error");
+    } catch {
+      setMessage("⚠️ Server error. Please try again later.");
     }
   };
 
   return (
     <div style={styles.card}>
-      <h2 style={styles.title}>Login</h2>
+      <h2 style={styles.title}>🔐 Employee Feedback Login</h2>
       <form onSubmit={handleSubmit}>
         <input
           style={styles.input}
-          placeholder="Username"
+          placeholder="👤 Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -38,13 +39,22 @@ function LoginPage({ onLogin }) {
         <input
           style={styles.input}
           type="password"
-          placeholder="Password"
+          placeholder="🔒 Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button style={styles.button} type="submit">Login</button>
+        <button style={styles.button} type="submit">
+          🚀 Login
+        </button>
       </form>
+
+      <p style={styles.linkWrapper}>
+        <Link to="/forgot-password" style={styles.forgotLink}>
+          ❓ Forgot Password?
+        </Link>
+      </p>
+
       {message && <p style={styles.error}>{message}</p>}
     </div>
   );
@@ -53,37 +63,53 @@ function LoginPage({ onLogin }) {
 const styles = {
   card: {
     maxWidth: "400px",
-    margin: "60px auto",
-    padding: "30px",
-    backgroundColor: "#fff",
-    borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+    margin: "80px auto",
+    padding: "40px",
+    backgroundColor: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
     textAlign: "center",
+    fontFamily: "Segoe UI, sans-serif",
   },
   title: {
-    marginBottom: "20px",
+    fontSize: "1.8rem",
+    color: "#2c3e50",
+    marginBottom: "25px",
   },
   input: {
     width: "100%",
-    padding: "10px",
-    marginBottom: "15px",
-    borderRadius: "6px",
+    padding: "12px",
+    marginBottom: "18px",
+    borderRadius: "8px",
     border: "1px solid #ccc",
     fontSize: "16px",
+    outline: "none",
+    transition: "border 0.3s ease",
   },
   button: {
     width: "100%",
-    padding: "10px",
-    backgroundColor: "#4CAF50",
-    color: "white",
+    padding: "12px",
+    backgroundColor: "#27ae60",
+    color: "#fff",
     border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
+    borderRadius: "8px",
     fontSize: "16px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
   },
   error: {
-    color: "red",
-    marginTop: "10px",
+    marginTop: "12px",
+    color: "#e74c3c",
+    fontWeight: "600",
+  },
+  linkWrapper: {
+    marginTop: "15px",
+  },
+  forgotLink: {
+    color: "#2980b9",
+    textDecoration: "none",
+    fontSize: "14px",
   },
 };
 
