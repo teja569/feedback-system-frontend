@@ -1,19 +1,23 @@
 import React, { useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ManagerDashboard from "./components/Dashboard/ManagerDashboard";
 import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard";
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   const [role, setRole] = useState("");
   const [userId, setUserId] = useState(null);
-  const [isSignup, setIsSignup] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setRole("");
     setUserId(null);
-    setIsSignup(false);
+    navigate("/");
   };
+  
 
   const styles = {
     wrapper: {
@@ -61,70 +65,55 @@ function App() {
     },
   };
 
-  if (!role) {
-    return (
-      <div style={styles.wrapper}>
-        <div style={styles.card}>
-          {isSignup ? (
-            <>
+  return (
+    <div style={styles.wrapper}>
+      <div style={styles.card}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              role ? (
+                role === "manager" ? (
+                  <>
+                    <ManagerDashboard managerId={userId} />
+                    <button onClick={handleLogout} style={styles.logoutBtn}>
+                      🔒 Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <EmployeeDashboard employeeId={userId} />
+                    <button onClick={handleLogout} style={styles.logoutBtn}>
+                      🔒 Logout
+                    </button>
+                  </>
+                )
+              ) : (
+                <LoginPage
+                  onLogin={(data) => {
+                    setRole(data.role);
+                    setUserId(data.id);
+                    navigate("/");
+                  }}
+                />
+              )
+            }
+          />
+          <Route
+            path="/signup"
+            element={
               <SignupPage
                 onSignupSuccess={(data) => {
                   setRole(data.role);
                   setUserId(data.id);
+                  navigate("/");
                 }}
               />
-              <p style={styles.link}>
-                Already have an account?{' '}
-                <button
-                  style={styles.switchBtn}
-                  onClick={() => setIsSignup(false)}
-                >
-                  Switch to Login
-                </button>
-              </p>
-            </>
-          ) : (
-            <>
-              <LoginPage
-                onLogin={(data) => {
-                  setRole(data.role);
-                  setUserId(data.id);
-                }}
-              />
-              <p style={styles.link}>
-                Don’t have an account?{' '}
-                <button
-                  style={styles.switchBtn}
-                  onClick={() => setIsSignup(true)}
-                >
-                  Signup Here
-                </button>
-              </p>
-            </>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={styles.wrapper}>
-      <div style={styles.card}>
-        {role === "manager" ? (
-          <>
-            <ManagerDashboard managerId={userId} />
-            <button onClick={handleLogout} style={styles.logoutBtn}>
-              🔒 Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <EmployeeDashboard employeeId={userId} />
-            <button onClick={handleLogout} style={styles.logoutBtn}>
-              🔒 Logout
-            </button>
-          </>
-        )}
+            }
+          />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+        </Routes>
       </div>
     </div>
   );
