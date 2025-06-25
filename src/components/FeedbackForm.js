@@ -22,8 +22,8 @@ function FeedbackForm({ managerId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
-    form.append("manager_id", managerId);
-    form.append("employee_id", employeeId);
+    form.append("manager_id", parseInt(managerId));
+    form.append("employee_id", parseInt(employeeId));
     form.append("strengths", strengths);
     form.append("improvements", improvements);
     form.append("sentiment", sentiment);
