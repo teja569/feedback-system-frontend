@@ -11,7 +11,7 @@ function FeedbackForm({ managerId }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/employees")
+      .get("https://feedback-system-backend-9djn.onrender.com/employees")
       .then((res) => setEmployees(res.data))
       .catch(() => setEmployees([]));
   }, []);
@@ -26,7 +26,7 @@ function FeedbackForm({ managerId }) {
     form.append("sentiment", sentiment);
 
     try {
-      const res = await axios.post("http://localhost:8000/feedback", form);
+      const res = await axios.post("https://feedback-system-backend-9djn.onrender.com/feedback", form);
       setMessage(res.data.message);
       setEmployeeId("");
       setStrengths("");

@@ -13,7 +13,7 @@ function ManagerDashboard({ managerId }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/employees")
+      .get("https://feedback-system-backend-9djn.onrender.com/employees")
       .then((res) => setEmployees(res.data))
       .catch(() => setEmployees([]));
   }, []);

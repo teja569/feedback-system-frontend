@@ -12,7 +12,7 @@ function FeedbackList({ employeeId, isManager = false }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/feedback/${employeeId}`)
+      .get(`https://feedback-system-backend-9djn.onrender.com/feedback/${employeeId}`)
       .then((res) => setFeedbacks(res.data.reverse()))
       .catch((err) => console.error("Error loading feedbacks:", err));
   }, [employeeId]);

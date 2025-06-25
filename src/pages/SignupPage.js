@@ -15,7 +15,7 @@ function SignupPage({ onSignupSuccess }) {
       form.append("password", password);
       form.append("role", role);
 
-      const res = await axios.post("http://localhost:8000/signup", form);
+      const res = await axios.post("https://feedback-system-backend-9djn.onrender.com/signup", form);
       if (res.data.role) {
         onSignupSuccess(res.data);
       } else {

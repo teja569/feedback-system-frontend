@@ -18,7 +18,7 @@ function EmployeeDashboard({ employeeId }) {
     const fetchFeedback = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8000/feedback/${employeeId}`
+          `https://feedback-system-backend-9djn.onrender.com/feedback/${employeeId}`
         );
         setFeedbackList(res.data.reverse());
       } catch (err) {
