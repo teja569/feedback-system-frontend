@@ -7,6 +7,7 @@ function PeerFeedbackForm({ senderId }) {
   const [message, setMessage] = useState("");
   const [anonymous, setAnonymous] = useState(false);
   const [status, setStatus] = useState("");
+  const [statusVisible, setStatusVisible] = useState(false);
 
   useEffect(() => {
     axios
@@ -32,6 +33,17 @@ function PeerFeedbackForm({ senderId }) {
       setStatus("❌ Failed to send feedback.");
     }
   };
+
+  useEffect(() => {
+    if (status) {
+      setStatusVisible(true);
+      const timer = setTimeout(() => {
+        setStatusVisible(false);
+        setTimeout(() => setStatus(""), 500); // Let animation complete before clearing
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   return (
     <div style={styles.card}>
@@ -79,7 +91,18 @@ function PeerFeedbackForm({ senderId }) {
           🚀 Submit Feedback
         </button>
 
-        {status && <p style={styles.status}>{status}</p>}
+        {status && (
+          <p
+            style={{
+              ...styles.status,
+              opacity: statusVisible ? 1 : 0,
+              transform: statusVisible ? "translateY(0px)" : "translateY(-10px)",
+              transition: "opacity 0.5s ease, transform 0.5s ease",
+            }}
+          >
+            {status}
+          </p>
+        )}
       </form>
     </div>
   );
@@ -154,8 +177,9 @@ const styles = {
   },
   status: {
     marginTop: "10px",
-    color: "#2ecc71",
     fontWeight: "bold",
+    fontSize: "15px",
+    color: "#2ecc71",
   },
 };
 

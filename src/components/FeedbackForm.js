@@ -8,12 +8,15 @@ function FeedbackForm({ managerId }) {
   const [improvements, setImprovements] = useState("");
   const [sentiment, setSentiment] = useState("positive");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("https://feedback-system-backend-9djn.onrender.com/employees")
       .then((res) => setEmployees(res.data))
-      .catch(() => setEmployees([]));
+      .catch(() => setEmployees([]))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -28,33 +31,37 @@ function FeedbackForm({ managerId }) {
     try {
       const res = await axios.post("https://feedback-system-backend-9djn.onrender.com/feedback", form);
       setMessage(res.data.message);
+      setError(false);
       setEmployeeId("");
       setStrengths("");
       setImprovements("");
       setSentiment("positive");
     } catch {
       setMessage("❌ Failed to submit feedback");
+      setError(true);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
       <label style={styles.label}>👤 Select Employee</label>
-      <select
-        style={styles.input}
-        onFocus={(e) => (e.target.style.borderColor = "#4CAF50")}
-        onBlur={(e) => (e.target.style.borderColor = "#ccc")}
-        value={employeeId}
-        onChange={(e) => setEmployeeId(e.target.value)}
-        required
-      >
-        <option value="">-- Select --</option>
-        {employees.map((emp) => (
-          <option key={emp.id} value={emp.id}>
-            {emp.username} (ID: {emp.id})
-          </option>
-        ))}
-      </select>
+      {loading ? (
+        <p>Loading employees...</p>
+      ) : (
+        <select
+          style={styles.input}
+          value={employeeId}
+          onChange={(e) => setEmployeeId(e.target.value)}
+          required
+        >
+          <option value="">-- Select --</option>
+          {employees.map((emp) => (
+            <option key={emp.id} value={emp.id}>
+              {emp.username} (ID: {emp.id})
+            </option>
+          ))}
+        </select>
+      )}
 
       <label style={styles.label}>💪 Strengths</label>
       <textarea
@@ -89,7 +96,11 @@ function FeedbackForm({ managerId }) {
         ✅ Submit Feedback
       </button>
 
-      {message && <p style={styles.message}>{message}</p>}
+      {message && (
+        <p style={{ ...styles.message, color: error ? "#e74c3c" : "#2e7d32" }}>
+          {message}
+        </p>
+      )}
     </form>
   );
 }
@@ -128,7 +139,6 @@ const styles = {
     height: "90px",
     backgroundColor: "#fff",
     fontFamily: "Segoe UI, sans-serif",
-    transition: "border-color 0.3s",
   },
   button: {
     padding: "14px",
@@ -139,11 +149,9 @@ const styles = {
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
-    transition: "background-color 0.3s",
   },
   message: {
     marginTop: "10px",
-    color: "#2e7d32",
     fontWeight: "bold",
     fontSize: "15px",
   },

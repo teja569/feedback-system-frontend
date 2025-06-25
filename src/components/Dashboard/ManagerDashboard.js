@@ -10,10 +10,7 @@ function ManagerDashboard({ managerId }) {
   const [employees, setEmployees] = useState([]);
   const [selectedId, setSelectedId] = useState("");
 
-  const handleLogout = () => {
-    localStorage.clear();
-    window.location.href = "/login";
-  };
+  
 
   useEffect(() => {
     axios

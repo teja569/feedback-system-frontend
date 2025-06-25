@@ -22,9 +22,9 @@ function FeedbackList({ employeeId, isManager = false }) {
   const startEdit = (fb) => {
     setEditingId(fb.id);
     setEditData({
-      strengths: fb.strengths,
-      improvements: fb.improvements,
-      sentiment: fb.sentiment,
+      strengths: fb.strengths || "",
+      improvements: fb.improvements || "",
+      sentiment: fb.sentiment || "positive",
     });
   };
 
@@ -65,7 +65,20 @@ function FeedbackList({ employeeId, isManager = false }) {
       ]),
       styles: { fontSize: 10 },
     });
-    doc.save("feedback_report.pdf");
+    doc.save(`feedback_report_${employeeId}.pdf`);
+  };
+
+  const getCardColor = (sentiment) => {
+    switch (sentiment) {
+      case "positive":
+        return "#e8fce8";
+      case "neutral":
+        return "#fffddc";
+      case "negative":
+        return "#ffe4e1";
+      default:
+        return "#f4f4f4";
+    }
   };
 
   return (
@@ -87,12 +100,7 @@ function FeedbackList({ employeeId, isManager = false }) {
             key={fb.id}
             style={{
               ...styles.card,
-              backgroundColor:
-                fb.sentiment === "positive"
-                  ? "#e8fce8"
-                  : fb.sentiment === "neutral"
-                  ? "#fffddc"
-                  : "#ffe4e1",
+              backgroundColor: getCardColor(fb.sentiment),
             }}
           >
             {editingId === fb.id ? (

@@ -3,27 +3,33 @@ import axios from "axios";
 
 function ForgotPassword() {
   const [username, setUsername] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleReset = async (e) => {
+  const handleRequest = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
     try {
       const form = new FormData();
       form.append("username", username);
-      form.append("new_password", newPassword);
 
-      const res = await axios.put("https://feedback-system-backend-9djn.onrender.com/reset-password", form);
-      setMessage(res.data.message);
+      const res = await axios.post(
+        "https://feedback-system-backend-9djn.onrender.com/forgot-password",
+        form
+      );
+      setMessage("✅ " + res.data.message + " (Check console for link)");
     } catch (err) {
-      setMessage("Failed to reset password");
+      setMessage("❌ User not found or server error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>🔐 Forgot Password</h2>
-      <form onSubmit={handleReset}>
+      <h2 style={styles.title}>🔑 Forgot Password</h2>
+      <form onSubmit={handleRequest}>
         <input
           style={styles.input}
           placeholder="Enter your username"
@@ -31,16 +37,8 @@ function ForgotPassword() {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="New password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <button style={styles.button} type="submit">
-          Reset Password
+        <button style={styles.button} type="submit" disabled={loading}>
+          {loading ? "Sending..." : "Get Reset Link"}
         </button>
       </form>
       {message && <p style={styles.message}>{message}</p>}
@@ -57,9 +55,12 @@ const styles = {
     borderRadius: "10px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
     textAlign: "center",
+    fontFamily: "Segoe UI, sans-serif",
   },
   title: {
     marginBottom: "20px",
+    fontSize: "1.5rem",
+    color: "#2c3e50",
   },
   input: {
     width: "100%",

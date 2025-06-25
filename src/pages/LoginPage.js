@@ -6,9 +6,11 @@ function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const form = new FormData();
       form.append("username", username);
@@ -20,12 +22,14 @@ function LoginPage({ onLogin }) {
       );
 
       if (res.data.role) {
-        onLogin(res.data); // Will be handled in App.js
+        onLogin(res.data); // Pass user data to parent
       } else {
         setMessage("❌ Invalid credentials");
       }
     } catch {
       setMessage("⚠️ Server error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,8 +52,8 @@ function LoginPage({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button style={styles.button} type="submit">
-          🚀 Login
+        <button style={styles.button} type="submit" disabled={loading}>
+          {loading ? "⏳ Logging in..." : "🚀 Login"}
         </button>
       </form>
 

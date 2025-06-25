@@ -6,29 +6,43 @@ function SignupPage({ onSignupSuccess, goToLogin }) {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("employee");
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
     try {
       const form = new FormData();
       form.append("username", username);
       form.append("password", password);
       form.append("role", role);
 
-      const res = await axios.post("https://feedback-system-backend-9djn.onrender.com/signup", form);
+      const res = await axios.post(
+        "https://feedback-system-backend-9djn.onrender.com/signup",
+        form
+      );
+
       if (res.data.role) {
-        onSignupSuccess(res.data);
+        setMessage("✅ Account created successfully!");
+        setIsSuccess(true);
+        onSignupSuccess?.(res.data);
       } else {
-        setMessage(res.data.error);
+        setMessage("❌ " + res.data.error);
+        setIsSuccess(false);
       }
     } catch (err) {
-      setMessage("Server error");
+      setMessage("❌ Server error. Please try again.");
+      setIsSuccess(false);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div style={styles.card}>
-      <h2 style={styles.title}>Create Account</h2>
+      <h2 style={styles.title}>📝 Create Account</h2>
       <form onSubmit={handleSubmit}>
         <input
           style={styles.input}
@@ -53,9 +67,17 @@ function SignupPage({ onSignupSuccess, goToLogin }) {
           <option value="employee">Employee</option>
           <option value="manager">Manager</option>
         </select>
-        <button style={styles.button} type="submit">Sign Up</button>
+        <button style={styles.button} type="submit" disabled={loading}>
+          {loading ? "Creating..." : "Sign Up"}
+        </button>
       </form>
-      {message && <p style={styles.error}>{message}</p>}
+
+      {message && (
+        <p style={{ ...styles.message, color: isSuccess ? "green" : "red" }}>
+          {message}
+        </p>
+      )}
+
       <p style={styles.link}>
         Already have an account?{" "}
         <button style={styles.switchBtn} onClick={goToLogin}>
@@ -67,20 +89,6 @@ function SignupPage({ onSignupSuccess, goToLogin }) {
 }
 
 const styles = {
-    link: {
-    marginTop: "20px",
-    fontSize: "1rem",
-  },
-  switchBtn: {
-    background: "none",
-    border: "none",
-    color: "#007bff",
-    cursor: "pointer",
-    textDecoration: "underline",
-    padding: 0,
-    fontSize: "1rem",
-  },
-
   card: {
     maxWidth: "400px",
     margin: "60px auto",
@@ -124,9 +132,22 @@ const styles = {
     fontSize: "16px",
     transition: "background-color 0.3s",
   },
-  error: {
-    color: "red",
+  message: {
     marginTop: "10px",
+    fontWeight: "bold",
+  },
+  link: {
+    marginTop: "20px",
+    fontSize: "1rem",
+  },
+  switchBtn: {
+    background: "none",
+    border: "none",
+    color: "#007bff",
+    cursor: "pointer",
+    textDecoration: "underline",
+    padding: 0,
+    fontSize: "1rem",
   },
 };
 

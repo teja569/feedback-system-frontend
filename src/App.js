@@ -10,6 +10,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 function App() {
   const [role, setRole] = useState("");
   const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loggingOut, setLoggingOut] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,13 +21,18 @@ function App() {
       setRole(savedRole);
       setUserId(Number(savedId));
     }
+    setTimeout(() => setLoading(false), 500); // Simulate loading
   }, []);
 
   const handleLogout = () => {
-    setRole("");
-    setUserId(null);
-    localStorage.clear();
-    navigate("/");
+    setLoggingOut(true);
+    setTimeout(() => {
+      setRole("");
+      setUserId(null);
+      localStorage.clear();
+      setLoggingOut(false);
+      navigate("/");
+    }, 800);
   };
 
   const styles = {
@@ -35,6 +42,8 @@ function App() {
       minHeight: "100vh",
       padding: "5vw 3vw",
       color: "#333",
+      transition: "opacity 0.4s ease",
+      opacity: loggingOut ? 0.3 : 1,
     },
     card: {
       maxWidth: "500px",
@@ -45,6 +54,8 @@ function App() {
       padding: "5vw",
       boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
       textAlign: "center",
+      transition: "transform 0.3s ease",
+      transform: loggingOut ? "scale(0.98)" : "scale(1)",
     },
     logoutBtn: {
       marginTop: "30px",
@@ -57,7 +68,17 @@ function App() {
       cursor: "pointer",
       transition: "background-color 0.3s",
     },
+    loader: {
+      textAlign: "center",
+      marginTop: "30vh",
+      fontSize: "1.3rem",
+      color: "#555",
+    },
   };
+
+  if (loading) {
+    return <div style={styles.loader}>🔄 Loading app...</div>;
+  }
 
   return (
     <div style={styles.wrapper}>

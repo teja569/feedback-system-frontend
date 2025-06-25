@@ -14,21 +14,22 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function EmployeeDashboard({ employeeId }) {
   const [feedbackList, setFeedbackList] = useState([]);
   const [peerFeedbacks, setPeerFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const res = await axios.get(
-          `https://feedback-system-backend-9djn.onrender.com/feedback/${employeeId}`
-        );
-        setFeedbackList(res.data.reverse());
+        const [managerRes, peerRes] = await Promise.all([
+          axios.get(`https://feedback-system-backend-9djn.onrender.com/feedback/${employeeId}`),
+          axios.get(`https://feedback-system-backend-9djn.onrender.com/peer-feedback/${employeeId}`),
+        ]);
 
-        const peerRes = await axios.get(
-          `https://feedback-system-backend-9djn.onrender.com/peer-feedback/${employeeId}`
-        );
+        setFeedbackList(managerRes.data.reverse());
         setPeerFeedbacks(peerRes.data.reverse());
       } catch (err) {
         console.error("Failed to load feedback", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -46,6 +47,8 @@ function EmployeeDashboard({ employeeId }) {
       sentimentCounts[fb.sentiment]++;
     }
   });
+
+  const totalSentiment = Object.values(sentimentCounts).reduce((a, b) => a + b, 0);
 
   const data = {
     labels: ["Positive", "Neutral", "Negative"],
@@ -78,11 +81,15 @@ function EmployeeDashboard({ employeeId }) {
     }
   };
 
+  if (loading) {
+    return <p style={{ textAlign: "center", marginTop: "50px" }}>🔄 Loading dashboard...</p>;
+  }
+
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>🎯 Employee Dashboard</h2>
 
-      {feedbackList.length > 0 && (
+      {totalSentiment > 0 && (
         <div style={styles.chartSection}>
           <h3>📊 Sentiment Summary</h3>
           <div style={styles.chartWrapper}>
