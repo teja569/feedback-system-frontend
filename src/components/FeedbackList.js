@@ -37,7 +37,7 @@ function FeedbackList({ employeeId, isManager = false }) {
     form.append("sentiment", editData.sentiment);
 
     try {
-      await axios.put(`http://localhost:8000/feedback/update/${id}`, form);
+      await axios.put(`https://feedback-system-backend-9djn.onrender.com/feedback/update/${id}`, form);
       const updated = feedbacks.map((fb) =>
         fb.id === id ? { ...fb, ...editData } : fb
       );
