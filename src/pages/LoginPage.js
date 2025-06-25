@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function LoginPage({ onLogin, onSwitchToSignup }) {
+function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -46,13 +46,6 @@ function LoginPage({ onLogin, onSwitchToSignup }) {
         <button style={styles.button} type="submit">Login</button>
       </form>
       {message && <p style={styles.error}>{message}</p>}
-
-      <p style={styles.signupPrompt}>
-        Don't have an account?
-      </p>
-      <button style={styles.signupButton} onClick={onSwitchToSignup}>
-        Sign Up
-      </button>
     </div>
   );
 }
@@ -91,22 +84,6 @@ const styles = {
   error: {
     color: "red",
     marginTop: "10px",
-  },
-  signupPrompt: {
-    marginTop: "20px",
-    fontSize: "0.95rem",
-    color: "#333",
-  },
-  signupButton: {
-    marginTop: "10px",
-    padding: "10px",
-    backgroundColor: "#2196F3",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "16px",
-    width: "100%",
   },
 };
 

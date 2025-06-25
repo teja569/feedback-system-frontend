@@ -5,9 +5,9 @@ import ManagerDashboard from "./components/Dashboard/ManagerDashboard";
 import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard";
 
 function App() {
-  const [role, setRole] = useState("");          // "manager" or "employee"
-  const [userId, setUserId] = useState(null);    // logged-in user's ID
-  const [isSignup, setIsSignup] = useState(false); // toggle between login/signup
+  const [role, setRole] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [isSignup, setIsSignup] = useState(false);
 
   const handleLogout = () => {
     setRole("");
@@ -15,46 +15,59 @@ function App() {
     setIsSignup(false);
   };
 
-  const wrapperStyle = {
-    fontFamily: "Segoe UI, sans-serif",
-    backgroundColor: "#f0f2f5",
-    minHeight: "100vh",
-    padding: "40px 20px",
-    color: "#333",
+  const styles = {
+    wrapper: {
+      fontFamily: "Segoe UI, sans-serif",
+      background: "linear-gradient(135deg, #f6f9fc, #ddeaf6)",
+      minHeight: "100vh",
+      padding: "40px 20px",
+      color: "#333",
+    },
+    card: {
+      maxWidth: "500px",
+      margin: "auto",
+      backgroundColor: "#ffffff",
+      borderRadius: "14px",
+      padding: "35px",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+      textAlign: "center",
+    },
+    link: {
+      marginTop: "25px",
+      fontSize: "1rem",
+    },
+    switchBtn: {
+      backgroundColor: "#4a90e2",
+      color: "#fff",
+      border: "none",
+      borderRadius: "6px",
+      padding: "10px 18px",
+      fontSize: "15px",
+      marginTop: "10px",
+      cursor: "pointer",
+      transition: "background-color 0.3s, transform 0.2s",
+    },
+    switchBtnHover: {
+      backgroundColor: "#3c7dc9",
+      transform: "scale(1.03)",
+    },
+    logoutBtn: {
+      marginTop: "30px",
+      padding: "12px 22px",
+      fontSize: "16px",
+      borderRadius: "6px",
+      backgroundColor: "#e74c3c",
+      color: "#fff",
+      border: "none",
+      cursor: "pointer",
+      transition: "background-color 0.3s",
+    },
   };
 
-  const cardStyle = {
-    maxWidth: "500px",
-    margin: "auto",
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "30px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-    textAlign: "center"
-  };
-
-  const linkStyle = {
-    marginTop: "15px",
-    fontSize: "0.95rem",
-  };
-  const logoutButtonStyle = {
-  marginTop: "20px",
-  padding: "10px 18px",
-  fontSize: "16px",
-  borderRadius: "6px",
-  backgroundColor: "#e74c3c",
-  color: "#fff",
-  border: "none",
-  cursor: "pointer",
-  transition: "background-color 0.3s",
-};
-
-
-  // Login or Signup screen
   if (!role) {
     return (
-      <div style={wrapperStyle}>
-        <div style={cardStyle}>
+      <div style={styles.wrapper}>
+        <div style={styles.card}>
           {isSignup ? (
             <>
               <SignupPage
@@ -63,9 +76,16 @@ function App() {
                   setUserId(data.id);
                 }}
               />
-              <p style={linkStyle}>
+              <p style={styles.link}>
                 Already have an account?{" "}
-                <button onClick={() => setIsSignup(false)}>Login</button>
+                <button
+                  style={styles.switchBtn}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#3c7dc9"}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4a90e2"}
+                  onClick={() => setIsSignup(false)}
+                >
+                  Switch to Login
+                </button>
               </p>
             </>
           ) : (
@@ -76,9 +96,16 @@ function App() {
                   setUserId(data.id);
                 }}
               />
-              <p style={linkStyle}>
-                Don't have an account?{" "}
-                <button onClick={() => setIsSignup(true)}>Signup</button>
+              <p style={styles.link}>
+                Don’t have an account?{" "}
+                <button
+                  style={styles.switchBtn}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#3c7dc9"}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4a90e2"}
+                  onClick={() => setIsSignup(true)}
+                >
+                  Signup Here
+                </button>
               </p>
             </>
           )}
@@ -87,26 +114,22 @@ function App() {
     );
   }
 
-  // Dashboard after login
   return (
-    <div style={wrapperStyle}>
-      <div style={cardStyle}>
-        {role === "manager" && (
+    <div style={styles.wrapper}>
+      <div style={styles.card}>
+        {role === "manager" ? (
           <>
             <ManagerDashboard managerId={userId} />
-            <button onClick={handleLogout} style={logoutButtonStyle}>
-  🔒 Logout
-</button>
-
+            <button onClick={handleLogout} style={styles.logoutBtn}>
+              🔒 Logout
+            </button>
           </>
-        )}
-        {role === "employee" && (
+        ) : (
           <>
             <EmployeeDashboard employeeId={userId} />
-            <button onClick={handleLogout} style={logoutButtonStyle}>
-  🔒 Logout
-</button>
-
+            <button onClick={handleLogout} style={styles.logoutBtn}>
+              🔒 Logout
+            </button>
           </>
         )}
       </div>
