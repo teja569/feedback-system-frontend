@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function SignupPage({ onSignupSuccess }) {
+function SignupPage({ onSignupSuccess, goToLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("employee");
@@ -56,11 +56,31 @@ function SignupPage({ onSignupSuccess }) {
         <button style={styles.button} type="submit">Sign Up</button>
       </form>
       {message && <p style={styles.error}>{message}</p>}
+      <p style={styles.link}>
+        Already have an account?{" "}
+        <button style={styles.switchBtn} onClick={goToLogin}>
+          Switch to Login
+        </button>
+      </p>
     </div>
   );
 }
 
 const styles = {
+    link: {
+    marginTop: "20px",
+    fontSize: "1rem",
+  },
+  switchBtn: {
+    background: "none",
+    border: "none",
+    color: "#007bff",
+    cursor: "pointer",
+    textDecoration: "underline",
+    padding: 0,
+    fontSize: "1rem",
+  },
+
   card: {
     maxWidth: "400px",
     margin: "60px auto",

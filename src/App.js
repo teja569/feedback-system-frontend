@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -12,12 +12,21 @@ function App() {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const savedRole = localStorage.getItem("role");
+    const savedId = localStorage.getItem("userId");
+    if (savedRole && savedId) {
+      setRole(savedRole);
+      setUserId(Number(savedId));
+    }
+  }, []);
+
   const handleLogout = () => {
     setRole("");
     setUserId(null);
+    localStorage.clear();
     navigate("/");
   };
-  
 
   const styles = {
     wrapper: {
@@ -36,21 +45,6 @@ function App() {
       padding: "5vw",
       boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
       textAlign: "center",
-    },
-    link: {
-      marginTop: "25px",
-      fontSize: "1rem",
-    },
-    switchBtn: {
-      backgroundColor: "#4a90e2",
-      color: "#fff",
-      border: "none",
-      borderRadius: "6px",
-      padding: "10px 18px",
-      fontSize: "15px",
-      marginTop: "10px",
-      cursor: "pointer",
-      transition: "background-color 0.3s, transform 0.2s",
     },
     logoutBtn: {
       marginTop: "30px",
@@ -93,6 +87,8 @@ function App() {
                   onLogin={(data) => {
                     setRole(data.role);
                     setUserId(data.id);
+                    localStorage.setItem("role", data.role);
+                    localStorage.setItem("userId", data.id);
                     navigate("/");
                   }}
                 />
@@ -106,8 +102,11 @@ function App() {
                 onSignupSuccess={(data) => {
                   setRole(data.role);
                   setUserId(data.id);
+                  localStorage.setItem("role", data.role);
+                  localStorage.setItem("userId", data.id);
                   navigate("/");
                 }}
+                goToLogin={() => navigate("/")}
               />
             }
           />

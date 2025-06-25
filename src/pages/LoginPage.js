@@ -14,9 +14,13 @@ function LoginPage({ onLogin }) {
       form.append("username", username);
       form.append("password", password);
 
-      const res = await axios.post("https://feedback-system-backend-9djn.onrender.com/login", form);
+      const res = await axios.post(
+        "https://feedback-system-backend-9djn.onrender.com/login",
+        form
+      );
+
       if (res.data.role) {
-        onLogin(res.data);
+        onLogin(res.data); // sets role and id in App.js
       } else {
         setMessage("❌ Invalid credentials");
       }
