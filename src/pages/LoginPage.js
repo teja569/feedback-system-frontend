@@ -20,7 +20,7 @@ function LoginPage({ onLogin }) {
       );
 
       if (res.data.role) {
-        onLogin(res.data); // sets role and id in App.js
+        onLogin(res.data); // Will be handled in App.js
       } else {
         setMessage("❌ Invalid credentials");
       }
@@ -31,7 +31,7 @@ function LoginPage({ onLogin }) {
 
   return (
     <div style={styles.card}>
-      <h2 style={styles.title}>🔐 Employee Feedback Login</h2>
+      <h2 style={styles.title}>🔐 Feedback Portal Login</h2>
       <form onSubmit={handleSubmit}>
         <input
           style={styles.input}
@@ -53,11 +53,15 @@ function LoginPage({ onLogin }) {
         </button>
       </form>
 
-      <p style={styles.linkWrapper}>
+      <div style={styles.linkWrapper}>
         <Link to="/forgot-password" style={styles.forgotLink}>
           ❓ Forgot Password?
         </Link>
-      </p>
+        <br />
+        <Link to="/signup" style={styles.signupLink}>
+          📝 Don't have an account? Sign up
+        </Link>
+      </div>
 
       {message && <p style={styles.error}>{message}</p>}
     </div>
@@ -114,6 +118,14 @@ const styles = {
     color: "#2980b9",
     textDecoration: "none",
     fontSize: "14px",
+  },
+  signupLink: {
+    color: "#34495e",
+    textDecoration: "none",
+    fontSize: "14px",
+    fontWeight: "bold",
+    marginTop: "8px",
+    display: "inline-block",
   },
 };
 
