@@ -28,7 +28,7 @@ function SignupPage({ onSignupSuccess }) {
 
   return (
     <div style={styles.card}>
-      <h2 style={styles.title}>Signup</h2>
+      <h2 style={styles.title}>Create Account</h2>
       <form onSubmit={handleSubmit}>
         <input
           style={styles.input}
@@ -46,14 +46,14 @@ function SignupPage({ onSignupSuccess }) {
           required
         />
         <select
-          style={styles.input}
+          style={styles.select}
           value={role}
           onChange={(e) => setRole(e.target.value)}
         >
           <option value="employee">Employee</option>
           <option value="manager">Manager</option>
         </select>
-        <button style={styles.button} type="submit">Signup</button>
+        <button style={styles.button} type="submit">Sign Up</button>
       </form>
       {message && <p style={styles.error}>{message}</p>}
     </div>
@@ -65,13 +65,16 @@ const styles = {
     maxWidth: "400px",
     margin: "60px auto",
     padding: "30px",
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
     borderRadius: "10px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
     textAlign: "center",
+    fontFamily: "Segoe UI, sans-serif",
   },
   title: {
-    marginBottom: "20px",
+    marginBottom: "25px",
+    fontSize: "24px",
+    color: "#333",
   },
   input: {
     width: "100%",
@@ -81,15 +84,25 @@ const styles = {
     border: "1px solid #ccc",
     fontSize: "16px",
   },
-  button: {
+  select: {
     width: "100%",
     padding: "10px",
-    backgroundColor: "#007bff",
+    marginBottom: "20px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "16px",
+    backgroundColor: "#f9f9f9",
+  },
+  button: {
+    width: "100%",
+    padding: "12px",
+    backgroundColor: "#28a745",
     color: "white",
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
     fontSize: "16px",
+    transition: "background-color 0.3s",
   },
   error: {
     color: "red",
